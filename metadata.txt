@@ -1,0 +1,11 @@
+FamilyLinksFullName;FullNameTransliterated;FamilyLinksGender;FatherName;MotherName;DateOfBirth;CountryOfBirth;Nationality;PlaceOfBirth;FamilyLinksStatus;Source;ContentType;PictureReference;ThumbnailImageUrl;WatermarkedImageUrl
+Clemens;Clemens;Male;Pops;Mum;2000-01-01;DE;DE;DE;Wolff;Missing;Source1;CTypeOne;i00001.jpg;i00001.thumbnail.jpg;i00001.water.jpg
+Clemens;Clemens;Male;Pops;Mum;2000-01-01;DE;DE;DE;Wolff;Missing;Source1;CTypeOne;i00001.jpg;i00001.thumbnail.jpg;i00001.water.jpg
+Clemens;Clemens;Male;Pops;Mum;2000-01-01;DE;DE;DE;Wolff;Missing;Source1;CTypeOne;i00001.jpg;i00001.thumbnail.jpg;i00001.water.jpg
+Clemens;Clemens;Male;Pops;Mum;2000-01-01;DE;DE;DE;Wolff;Missing;Source1;CTypeOne;i00001.jpg;i00001.thumbnail.jpg;i00001.water.jpg
+Clemens;Clemens;Male;Pops;Mum;2000-01-01;DE;DE;DE;Wolff;Missing;Source1;CTypeOne;i00001.jpg;i00001.thumbnail.jpg;i00001.water.jpg
+Clemens;Clemens;Male;Pops;Mum;2000-01-01;DE;DE;DE;Wolff;Missing;Source1;CTypeOne;i00001.jpg;i00001.thumbnail.jpg;i00001.water.jpg
+Clemens;Clemens;Male;Pops;Mum;2000-01-01;DE;DE;DE;Wolff;Missing;Source1;CTypeOne;i00001.jpg;i00001.thumbnail.jpg;i00001.water.jpg
+Clemens;Clemens;Male;Pops;Mum;2000-01-01;DE;DE;DE;Wolff;Missing;Source1;CTypeOne;i00001.jpg;i00001.thumbnail.jpg;i00001.water.jpg
+Clemens;Clemens;Male;Pops;Mum;2000-01-01;DE;DE;DE;Wolff;Missing;Source1;CTypeOne;i00001.jpg;i00001.thumbnail.jpg;i00001.water.jpg
+Clemens;Clemens;Male;Pops;Mum;2000-01-01;DE;DE;DE;Wolff;Missing;Source1;CTypeOne;i00001.jpg;i00001.thumbnail.jpg;i00001.water.jpg
