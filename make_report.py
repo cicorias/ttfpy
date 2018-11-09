@@ -154,16 +154,20 @@ with open(report_file, 'w', encoding='utf-8') as fobj:
         fobj.write('  <a name="{0}" href="#{0}" title="Link to match">&para;</a>\n'.format('%s-%s' % (quote(source.replace('/', '__')), quote(match.replace('/', '__')))))
         fobj.write('  <table class="metadata">\n')
 
+        fobj.write('  <thead>\n')
         fobj.write('    <tr>\n')
         for key in metadata_keys:
             fobj.write('      <th scope="col">%s</th>\n' % key)
         fobj.write('    </tr>\n')
+        fobj.write('  </thead>\n')
 
+        fobj.write('  <tbody>\n')
         for prefix, metadata in ('source_', source_metadata), ('match_', match_metadata):
             fobj.write('    <tr>\n')
             for key in metadata_keys:
                 fobj.write('    <td data-{0}="{1}">{1}</td>\n'.format(key, metadata.get(prefix + key, 'NULL')))
             fobj.write('    </tr>\n')
+        fobj.write('  </tbody>\n')
 
         fobj.write('  </table>\n')
         fobj.write('</div>\n')

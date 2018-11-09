@@ -1,35 +1,61 @@
 body {
   margin: 0;
+  color: #111111;
 }
 
 .result {
   margin: 1em 0;
   padding: 1em;
-  background-color: silver;
+  background-color: #DDDDDD;
 }
 
 .result.missing {
-  background-color: maroon;
+  background-color: #FF4136;
 }
 
 .result.moved {
-  background-color: olive;
+  background-color: #FFDC00;
 }
 
 .confidence {
   font-weight: bold;
   font-size: 20px;
-  color: darkred;
 }
 
 img {
-  width: 150px;
-  border: 2px solid black;
+  height: 150px;
+}
+
+th {
+  font-weight: normal;
+  font-style: italic;
+}
+
+table {
+  border: none;
+  border-collapse: collapse;
+  vertical-align: middle;
+  text-align: center;
+  display: block;
+  padding-top: 1em;
+}
+
+table td, table th {
+  border-left: 1px solid #111111;
+  padding: 5px;
+}
+
+table th {
+  border-bottom: 1px solid #111111;
+}
+
+table td:first-child, table th:first-child {
+  border-left: none;
 }
 
 .controls {
   position: fixed;
-  background-color: lightblue;
+  background-color: #7FDBFF;
   padding: 1em;
   top: 0;
   width: 100%;
