@@ -83,6 +83,7 @@ with open(report_file, 'w', encoding='utf-8') as fobj:
     for dropdown in 'ContentType', 'CountryOfBirth', 'Nationality', 'FamilyLinksGender', 'FamilyLinksStatus', 'Source':
         fobj.write('<label for="{0}">{0}\n'.format(dropdown))
         fobj.write('  <select name="{0}" id="{0} value="Apply filters" title="Apply filters">">\n'.format(dropdown))
+        fobj.write('    <option value="">ALL</option>\n')
         dropdown_values = Counter(row[key + dropdown] for row in rows for key in ['source_', 'match_'])
         total_count = sum(dropdown_values.values())
         for dropdown_value, count in dropdown_values.most_common():
