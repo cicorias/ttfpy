@@ -137,10 +137,14 @@ with open(report_file, 'w', encoding='utf-8') as fobj:
 
         result_type = "result"
 
-        if source_metadata["ContentType"] != match_metadata["ContentType"] and source_metadata["ContentType"] != "NULL" and match_metadata["ContentType"] != "NULL":
+        source_contenttype = source_metadata["source_ContentType"]
+        match_contenttype = match_metadata["match_ContentType"]
+        if source_contenttype != match_contenttype and source_contenttype != "NULL" and match_contenttype != "NULL":
             result_type += " missing"
 
-        if source_metadata["Source"] != match_metadata["Source"] and source_metadata["Source"] != "NULL" and match_metadata["Source"] != "NULL":
+        source_source = source_metadata["source_Source"]
+        match_source = match_metadata["match_Source"]
+        if source_source != match_source and source_source != "NULL" and match_source != "NULL":
             result_type += " moved"
 
         fobj.write('<div class="%s" data-confidence="%s">\n' % (result_type, confidence))
