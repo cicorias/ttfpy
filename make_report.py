@@ -170,6 +170,6 @@ with open(report_file, 'w', encoding='utf-8') as fobj:
     ''')
 
     for js_script in js_scripts:
-        fobj.write('<script>%s</script>' % inject_content(js_script))
+        fobj.write('<script>%s</script>\n' % inject_content(js_script))
     fobj.write('</body>\n')
     fobj.write('</html>\n')
