@@ -27,8 +27,6 @@ $(document).ready(function () {
       });
     });
 
-
-
     console.log('running all filters...');
     $(".result").each(function () {
       var $result = $(this);
@@ -78,12 +76,17 @@ $(document).ready(function () {
 
   function isInvalidDate(node) {
     var value = $(node).attr("data-DateOfBirth") || "";
+    console.log('isInvalidDate check on value: %s', value);
+    if ($("#birthday-filter").val() === "")
+      return true;
+
     return !value || value === "NULL";
   }
 
   function isYoungerDate(node) {
     var value = $(node).attr("data-DateOfBirth") || "";
     var birthdate = parseDate($("#birthday-filter").val());
+    console.log('isYoungerDate - dob: %s  -- birthdate: %s', value, birthdate)
     return parseDate(value) > birthdate;
   }
 
@@ -93,10 +96,7 @@ $(document).ready(function () {
     var day = parseInt(parts[0], 10);
     var month = parseInt(parts[1], 10);
     var year = parseInt(parts[2], 10);
-    var date = new Date();
-    date.setDate(day);
-    date.setMonth(month - 1);
-    date.setYear(year);
+    var date = new Date(year,month - 1, day, 0, 0, 0);
     return date;
   }
 
@@ -131,13 +131,19 @@ $(document).ready(function () {
   function isAgeOk ($result){
     var $metadatas = $result.find("[data-DateOfBirth]");
     if (isInvalidDate($metadatas[0]) || isInvalidDate($metadatas[1])) {
+      console.warn('invalid date passed');
       return true;
     }
 
-    if (isYoungerDate($metadatas[0]) && isYoungerDate($metadatas[1]))
+    if (isYoungerDate($metadatas[0]) && isYoungerDate($metadatas[1])){
+      console.log('isAgeOk - no');
       return false;
+    }
     else 
-      return true;
+      {
+        console.log('isAgeOK -- YES');
+        return true;
+      }
   }
 
   var timeout;
