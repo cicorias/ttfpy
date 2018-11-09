@@ -31,8 +31,8 @@ def compute_comparisons(db_connection: str, chunk_size: int) -> Iterable[List[Co
         for i in range(len(similarities)):
             for j in range(len(similarities[i])):
                 if i != j:
-                    this_comparison_indices = i, j
-                    that_comparison_indices = j, i
+                    this_comparison_indices = i + offset, j
+                    that_comparison_indices = j, i + offset
                     if (this_comparison_indices not in existing_comparisons) and (that_comparison_indices not in existing_comparisons):
                         comparisons.append(Comparison(this_image_path=image_paths[i + offset],
                                                       that_image_path=image_paths[j],
