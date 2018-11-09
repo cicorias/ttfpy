@@ -147,8 +147,19 @@ with open(report_file, 'w', encoding='utf-8') as fobj:
         fobj.write('</div>\n')
     fobj.write('</div>\n')
 
-    fobj.write('<script>$(document).ready(function(){$("img").lazyload();});</script>')
-    fobj.write('<script>$(document).ready(function(){$("select").select2({dropdownAutoWidth:true,width:"auto"});});</script>')
+    fobj.write('''
+      <script>
+      $(document).ready(function() {
+        $("img").lazyload();
+
+        $("select").select2({
+          dropdownAutoWidth: true,
+          width: "auto",
+        });
+      });
+      </script>'
+    ''')
+
     for js_script in js_scripts:
         fobj.write('<script>%s</script>' % inject_content(js_script))
     fobj.write('</body>\n')
