@@ -58,12 +58,15 @@ for row in DictReader(args.tsv_file, delimiter='\t'):
 
 lines.sort(key=lambda r: float(r['confidence']), reverse=True)
 
+image_placeholder = 'data:image/gif;base64,R0lGODdhAQABAPAAAMPDwwAAACwAAAAAAQABAAACAkQBADs='
+
 with open(report_file, 'w', encoding='utf-8') as fobj:
     fobj.write('<html>\n')
     fobj.write('<head>\n')
     fobj.write('<title>TTF Report - index.html</title>')
     fobj.write('  <style>\n%s\n</style>\n' % css)
     fobj.write('  <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.3.1.js"></script>\n')
+    fobj.write('  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.lazyload/1.9.1/jquery.lazyload.min.js"></script>\n')
     fobj.write('</head>\n')
     fobj.write('<body>\n')
     fobj.write(injectScript())
@@ -94,8 +97,8 @@ with open(report_file, 'w', encoding='utf-8') as fobj:
         match_url = match_url.replace(" ", "%20")
 
         fobj.write('<div class="result" data-confidence="%s">\n' % confidence)
-        fobj.write('  <img class="source" src="%s" title="%s">\n' % (source_url, source))
-        fobj.write('  <img class="match" src="%s" title="%s">\n' % (match_url, match))
+        fobj.write('  <img class="source" src="%s" data-original="%s" title="%s">\n' % (image_placeholder, source_url, source))
+        fobj.write('  <img class="match" src="%s"  data-original="%s"title="%s">\n' % (image_placeholder, match_url, match))
         fobj.write('  <span class="confidence">%s</span>\n' % confidence)
         fobj.write('  <table class="metadata">\n')
 
@@ -113,5 +116,6 @@ with open(report_file, 'w', encoding='utf-8') as fobj:
         fobj.write('  </table>\n')
         fobj.write('</div>\n')
 
+    fobj.write('<script>$(document).ready(function(){$("img").lazyload();});</script>')
     fobj.write('</body>\n')
     fobj.write('</html>\n')
