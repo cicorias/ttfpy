@@ -21,28 +21,21 @@ def _main(args: Namespace) -> None:
     print("COMPUTING EMBEDDINGS")
     for i, embeddings in enumerate(
             compute_embeddings(args.ALGORITHM_CONTAINER, args.IMAGE_DIR_PATH, os.listdir(args.IMAGE_DIR_PATH),
-                               args.CHUNK_SIZE)):
+                               args.EMBEDDING_CHUNK_SIZE)):
         if embeddings:
             store_in_database(args.DB_CONNECTION, embeddings)
-            print("ITERATION {} OF EMBEDDINGS, USING CHUNK_SIZE {} IN DATABASE".format(i, args.CHUNK_SIZE))
+            print("ITERATION {} OF EMBEDDINGS, USING CHUNK_SIZE {} IN DATABASE".format(i, args.EMBEDDING_CHUNK_SIZE))
     print("EMBEDDINGS IN DATABASE")
 
-    if args.SHOULD_COMPUTE_COMPARISONS:
-        print("COMPUTING COMPARISONS")
-        comparisons = compute_comparisons(args.DB_CONNECTION)
-        store_in_database(args.DB_CONNECTION, comparisons)
-        print("COMPARISONS IN DATABASE")
+    for i, comparisons in enumerate(compute_comparisons(args.DB_CONNECTION, args.COMPARISON_CHUNK_SIZE)):
+        if comparisons:
+            store_in_database(args.DB_CONNECTION, comparisons)
+            print("ITERATION {} OF COMPARISONS, USING CHUNK_SIZE {} IN DATABASE".format(i, args.COMPARISON_CHUNK_SIZE))
+    print("COMPARISONS IN DATABASE")
 
-    if args.TSV_REPORT_FILE_PATH:
-        print("GENERATING REPORT")
-        generate_tsv_report(args.DB_CONNECTION, args.TSV_REPORT_FILE_PATH)
-        print("REPORT GENERATED")
-
-
-def _validate_parsed_args(args: Namespace) -> None:
-    if args.TSV_REPORT_FILE_PATH and not args.SHOULD_COMPUTE_COMPARISONS:
-        raise ValueError("TSV_REPORT_FILE_PATH specified, but SHOULD_COMPUTE_COMPARISONS is false. \
-To generate the report, comparisons are required")
+    print("GENERATING REPORT")
+    generate_tsv_report(args.DB_CONNECTION, args.TSV_REPORT_FILE_PATH)
+    print("REPORT GENERATED")
 
 
 def _parse_arguments() -> Namespace:
@@ -51,7 +44,8 @@ def _parse_arguments() -> Namespace:
     parser.add_argument('--XL_FILE_PATH', type=str, required=True, help='path to excel metadata.')
     parser.add_argument('--XL_SHEET_NAME', type=str, required=True, help='name of sheet in excel metadata')
     parser.add_argument('--IMAGE_DIR_PATH', type=str, required=True, help='path to images to vectorize')
-    parser.add_argument('--CHUNK_SIZE', type=int, required=True, help='amount of images to vectorize at once.')
+    parser.add_argument('--EMBEDDING_CHUNK_SIZE', type=int, required=True, help='amount of images to vectorize at once.')
+    parser.add_argument('--COMPARISON_CHUNK_SIZE', type=int, required=True, help='amount of embeddings to compare at once.')
     parser.add_argument('--ALGORITHM_CONTAINER', type=str, required=True, help='facenet or insightface')
     parser.add_argument(
         '--SHOULD_COMPUTE_COMPARISONS',
@@ -61,14 +55,13 @@ def _parse_arguments() -> Namespace:
     parser.add_argument(
         '--TSV_REPORT_FILE_PATH',
         type=str,
-        required=False,
+        required=True,
         help='tsv report file path, if you want to generate tsv report')
     return parser.parse_args()
 
 
 def _cli() -> None:
     args = _parse_arguments()
-    _validate_parsed_args(args)
     _main(args)
 
 

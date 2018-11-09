@@ -50,3 +50,7 @@ class Comparison(Base):  # type: ignore
     this_image_path = Column(String)
     that_image_path = Column(String)
     cosine_similarity = Column(Float)
+
+    def __repr__(self):
+        return "<Comparison(id={}, this_image_path={}, that_image_path={}, cosine_similarity={}>".format(
+            self.id, self.this_image_path, self.that_image_path, self.cosine_similarity)
