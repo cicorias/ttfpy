@@ -61,7 +61,7 @@ css_dependencies = [
 ]
 
 js_scripts = [
-    'injectJavascript.js',
+    'script.js',
 
 ]
 
