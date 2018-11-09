@@ -8,28 +8,52 @@ $(document).ready(function () {
 
   var searchExpression = null;
 
-  $("#name-search").change(function () {
-    var $search = $(this);
+  function doIt (){
+
+    var $search = $("#name-search");
     try {
       searchExpression = new RegExp($search.val(), "gi");
     } catch (e) {
-      alert(e);
-      return;
-    }
+      console.error(e);
+      alert('error on search expression: %s', e);
+    }    
 
+    console.log('running all filters...');
     $(".result").each(function () {
       var $result = $(this);
+      
       var anyColumnMatches = getColumnMatches($result);
+      
+      var min = $("#confidence-min").val();
+      var max = $("#confidence-max").val();
+      var confidenceMatches = shouldApplyConfidence($result, min, max);
 
-      if (anyColumnMatches) {
+      console.log('anyColumnMatches %s  -  %s', anyColumnMatches, confidenceMatches);
+      if (anyColumnMatches && confidenceMatches) {
+        console.log('showing');
         $result.show();
       } else {
+        console.log('hiding');
         $result.hide();
       }
     });
+  }
+
+  
+  function shouldApplyConfidence(item, min, max) {
+    console.log('should Apply Confidence');
+    var level = item.attr("data-confidence");
+    console.log('level is %s', level);
+    return min && max && (level > min / 100 && level < max / 100);
+  }
+
+  $("#name-search").change(function () {
+    console.log('name search changed');
+    doIt();
   });
 
   function getColumnMatches($result) {
+    console.log('get column matches');
     var anyColumnMatches = searchFields.some(function (searchField) {
       var $metadatas = $result.find("[data-" + searchField + "]");
       var hasSearchTerm = $metadatas.filter(function (i, metadata) {
@@ -59,31 +83,16 @@ $(document).ready(function () {
     }
   });
 
-  setSlider();
-
   function setSlider() {
+    console.log('setting slider');
     var newMin = $("#slider-range").slider("values", 0);
     var newMax = $("#slider-range").slider("values", 1)
     $("#amount").val(newMin + " - " + newMax);
     $("#confidence-min").val(newMin);
     $("#confidence-max").val(newMax);
-    applyConfidence(newMin, newMax);
+    doIt();
   }
 
-  function applyConfidence(min, max) {
-    console.log('apply min of %s and max of %s', min, max);
-    $(".result").filter(function () {
-      var shouldShow = shouldApplyConfidence($(this), min, max);
-      if (shouldShow)
-        $(this).show()
-      else
-        $(this).hide();
-    });
-  }
-
-  function shouldApplyConfidence(item, min, max) {
-    var level = item.attr("data-confidence");
-    console.log('level is %s', level);
-    return min && max && (level > min / 100 && level < max / 100);
-  }
+  setSlider();
+  doIt();
 });
