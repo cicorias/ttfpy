@@ -11,7 +11,8 @@ parser.add_argument('--metadata_file_delimiter', default=';')
 args = parser.parse_args()
 
 all_metadata = {}
-for row in DictReader(args.metadata_file, delimiter=args.metadata_file_delimiter):
+metadata_reader = DictReader(args.metadata_file, delimiter=args.metadata_file_delimiter)
+for row in metadata_reader:
     try:
         image_path = row.get('ImagePath', row['ThumbnailImageUrl'])[1:].replace('/', '__')
         image_path = image_path.replace('.thumb', '')
@@ -20,12 +21,11 @@ for row in DictReader(args.metadata_file, delimiter=args.metadata_file_delimiter
     except Exception as ex:
         print(ex, file=stderr)
 
-metadata_keys = sorted(all_metadata.keys())
+metadata_keys = sorted(metadata_reader.fieldnames)
 
-output = DictWriter(stdout, fieldnames=
-  ['source', 'match', 'confidence'] +
-  ['source_' + key for key in metadata_keys] +
-  ['match_' + key for key in metadata_keys])
+output = DictWriter(stdout, fieldnames=['source', 'match', 'confidence'] +
+                                       ['source_' + key for key in metadata_keys] +
+                                       ['match_' + key for key in metadata_keys])
 output.writeheader()
 
 for (source, match, confidence) in CsvReader(args.tsv_file, delimiter=args.tsv_file_delimiter):

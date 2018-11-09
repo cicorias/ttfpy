@@ -62,7 +62,7 @@ with open(report_file, 'w', encoding='utf-8') as fobj:
         match_metadata = {key: value for (key, value) in row.items() if key.startswith('match_')}
         metadata_keys = sorted({
             key.replace(prefix, '')
-            for (prefix, metadata) in ('source_', source_metadata), ('match_', match_metadata)
+            for (prefix, metadata) in [('source_', source_metadata), ('match_', match_metadata)]
             for key in metadata})
 
         source_url = source.replace("/hackfest-data/ttf-photos", "http://172.22.41.40:9999")
