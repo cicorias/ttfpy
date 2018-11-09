@@ -8,6 +8,14 @@ body {
   background-color: silver;
 }
 
+.result.missing {
+  background-color: maroon;
+}
+
+.result.moved {
+  background-color: olive;
+}
+
 .confidence {
   font-weight: bold;
   font-size: 20px;

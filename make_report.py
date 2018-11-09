@@ -135,7 +135,15 @@ with open(report_file, 'w', encoding='utf-8') as fobj:
             for (prefix, metadata) in [('source_', source_metadata), ('match_', match_metadata)]
             for key in metadata} - metadata_excludes)
 
-        fobj.write('<div class="result" data-confidence="%s">\n' % confidence)
+        result_type = "result"
+
+        if source_metadata["ContentType"] != match_metadata["ContentType"] and source_metadata["ContentType"] != "NULL" and match_metadata["ContentType"] != "NULL":
+            result_type += " missing"
+
+        if source_metadata["Source"] != match_metadata["Source"] and source_metadata["Source"] != "NULL" and match_metadata["Source"] != "NULL":
+            result_type += " moved"
+
+        fobj.write('<div class="%s" data-confidence="%s">\n' % (result_type, confidence))
         fobj.write('  <img class="source" src="%s" data-original="%s" title="%s">\n' % (image_placeholder, quote(source), source))
         fobj.write('  <img class="match" src="%s"  data-original="%s" title="%s">\n' % (image_placeholder, quote(match), match))
         fobj.write('  <span class="confidence">%s</span>\n' % confidence)
