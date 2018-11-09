@@ -38,6 +38,11 @@ img {
   background-color: lightblue;
   padding: 1em;
   top: 0;
+  height: 5em;
+}
+
+.results {
+  padding-top: 7em;
 }
 '''
 
@@ -116,9 +121,9 @@ with open(report_file, 'w', encoding='utf-8') as fobj:
             fobj.write('    <option value="{0}">{0}</option>\n'.format(dropdown_value))
         fobj.write('  </select>\n')
         fobj.write('</label>\n')
-
     fobj.write('</div>\n')
 
+    fobj.write('<div class="results">\n')
     for i, row in enumerate(rows):
         if i >= args.max_results:
             break
@@ -161,6 +166,7 @@ with open(report_file, 'w', encoding='utf-8') as fobj:
 
         fobj.write('  </table>\n')
         fobj.write('</div>\n')
+    fobj.write('</div>\n')
 
     fobj.write('<script>$(document).ready(function(){$("img").lazyload();});</script>')
     fobj.write('<script>$(document).ready(function(){$("select").select2({dropdownAutoWidth:true,width:"auto"});});</script>')
