@@ -1,0 +1,32 @@
+<div id="slider-range" class="slider"></div>
+<div>
+  <label for="amount">Confidence Range</label>
+  <input type="text" id="amount" readonly style="border:0; color:#f6931f; font-weight:bold;">
+</div>
+<script>
+  $(function () {
+    var timeout;
+    $("#slider-range").slider({
+      orientation: "horizontal",
+      max: 100,
+      min: 50,
+      range: true,
+      values: [95, 100],
+      slide: function (event, ui) {
+        clearTimeout(timeout);
+        timeout =  setTimeout( setSlider(), 1000 );
+        // setSlider(ui);
+      }
+    });
+
+     setSlider();
+  });
+
+  function setSlider(ui) {
+    var newMin = $("#slider-range").slider("values", 0);
+    var newMax = $("#slider-range").slider("values", 1)
+    $("#amount").val(newMin + " - " + newMax);
+    $("#confidence-min").val(newMin / 100);
+    $("#confidence-max").val(newMax / 100);
+}
+</script>
