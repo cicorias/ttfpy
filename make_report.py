@@ -44,6 +44,11 @@ img {
 report_file = args.report_file.name
 args.report_file.close()
 
+metadata_excludes = {
+    'ThumbnailImageUrl',
+    'WatermarkedImageUrl',
+}
+
 
 def inject_script(path):
     dirpath = os.path.dirname(__file__)
@@ -130,7 +135,7 @@ with open(report_file, 'w', encoding='utf-8') as fobj:
         metadata_keys = sorted({
             key.replace(prefix, '')
             for (prefix, metadata) in [('source_', source_metadata), ('match_', match_metadata)]
-            for key in metadata})
+            for key in metadata} - metadata_excludes)
 
         source_url = source.replace("%", "%25")
         match_url = match.replace("%", "%25")
