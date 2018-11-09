@@ -11,6 +11,25 @@ parser.add_argument('--max_confidence', type=float, default=1)
 parser.add_argument('--max_results', type=float, default=float("inf"))
 args = parser.parse_args()
 
+css = '''
+.result {
+  margin: 1em;
+  padding: 1em;
+  background-color: silver;
+}
+
+.confidence {
+  font-weight: bold;
+  font-size: 20px;
+  color: darkred;
+}
+
+img {
+  width: 150px;
+  border: 2px solid black;
+}
+'''
+
 report_file = args.report_file.name
 args.report_file.close()
 
@@ -43,23 +62,8 @@ with open(report_file, 'w', encoding='utf-8') as fobj:
     fobj.write('<html>\n')
     fobj.write('<head>\n')
     fobj.write('<title>TTF Report - index.html</title>')
-    fobj.write('  <style>\n')
-    fobj.write('    .result {\n')
-    fobj.write('      margin: 1em;\n')
-    fobj.write('      padding: 1em;\n')
-    fobj.write('      background-color: silver;\n')
-    fobj.write('    }\n')
-    fobj.write('    .confidence {\n')
-    fobj.write('      font-weight: bold;\n')
-    fobj.write('      font-size: 20px;\n')
-    fobj.write('      color: darkred;\n')
-    fobj.write('    }\n')
-    fobj.write('    img {\n')
-    fobj.write('      width: 150px;\n')
-    fobj.write('      border: 2px solid black;\n')
-    fobj.write('    }\n')
-    fobj.write('  </style>\n')
-    fobj.write('<script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.3.1.js"></script>\n')
+    fobj.write('  <style>\n%s\n</style>\n' % css)
+    fobj.write('  <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.3.1.js"></script>\n')
     fobj.write('</head>\n')
     fobj.write('<body>\n')
     fobj.write(injectScript())
