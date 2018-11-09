@@ -57,6 +57,7 @@ css_dependencies = [
 js_scripts = [
     'confidence.js',
     'dropdowns.js',
+    'names.js',
 ]
 
 with open(report_file, 'w', encoding='utf-8') as fobj:
@@ -96,6 +97,12 @@ with open(report_file, 'w', encoding='utf-8') as fobj:
         fobj.write('  </select>\n')
         fobj.write('</label>\n')
     fobj.write('</div>\n')
+
+    fobj.write('''
+    <div class="control">
+      <input type="search" placeholder="Search for names" id="name-search">
+    </div>
+    ''')
 
     fobj.write('</div>\n')
 
