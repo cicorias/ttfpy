@@ -110,7 +110,7 @@ with open(report_file, 'w', encoding='utf-8') as fobj:
 
     fobj.write('''
     <div class="control">
-      <input type="text" placeholder="Search for birthdays after (yyyy-mm-dd)" id="birthday-filter">
+      <input type="text" placeholder="Search for birthdays after dd.mm.yyyy" id="birthday-filter">
     </div>
     ''')
 
