@@ -42,6 +42,7 @@ lines.sort(key=lambda r: float(r['confidence']), reverse=True)
 with open(report_file, 'w', encoding='utf-8') as fobj:
     fobj.write('<html>\n')
     fobj.write('<head>\n')
+    fobj.write('<title>TTF Report - index.html</title>')
     fobj.write('  <style>\n')
     fobj.write('    .result {\n')
     fobj.write('      margin: 1em;\n')
@@ -81,10 +82,10 @@ with open(report_file, 'w', encoding='utf-8') as fobj:
             for (prefix, metadata) in [('source_', source_metadata), ('match_', match_metadata)]
             for key in metadata})
 
-        source_url = source.replace("/hackfest-data/ttf-photos", "http://172.22.41.40:9999")
-        match_url = match.replace("/hackfest-data/ttf-photos", "http://172.22.41.40:9999")
-        source_url = source_url.replace("%", "%25")
-        match_url = match_url.replace("%", "%25")
+        #source_url = source.replace("/hackfest-data/ttf-photos", "http://172.22.41.40:9999")
+        #match_url = match.replace("/hackfest-data/ttf-photos", "http://172.22.41.40:9999")
+        source_url = source.replace("%", "%25")
+        match_url = match.replace("%", "%25")
         source_url = source_url.replace(" ", "%20")
         match_url = match_url.replace(" ", "%20")
 

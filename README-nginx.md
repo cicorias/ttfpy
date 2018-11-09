@@ -1,5 +1,5 @@
 # Nginx configuration...
-Nginx is used to serve the static HTML file - as an index.html file. Images are then served from the `/images` path on the host using the following example configurations.
+Nginx is used to serve the static HTML file - as an index.html file. Images are then served from the `/hackfest-data/ttf-photos/` path on the host using the following example configurations.
 
 
 
@@ -54,10 +54,8 @@ sudo vi /etc/nginx/sites-enabled/default
 
 ```
 
-
-
 ```
-location /images {
+location /hackfest-data/ttf-photos/ {
         alias /c/g/irc/py/ttf-html/images/;
 
 }
