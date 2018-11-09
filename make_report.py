@@ -44,22 +44,27 @@ def inject_script(path):
     return data
 
 
-lines = []
+rows = []
 for row in DictReader(args.tsv_file, delimiter='\t'):
     source = row['source'].strip()
     match = row['match'].strip()
     confidence = float(row['confidence'])
     if source == match or confidence >= args.max_confidence or confidence <= args.min_confidence:
         continue
-    lines.append(row)
+    rows.append(row)
 
-lines.sort(key=lambda r: float(r['confidence']), reverse=True)
+rows.sort(key=lambda r: float(r['confidence']), reverse=True)
 
 image_placeholder = 'data:image/gif;base64,R0lGODdhAQABAPAAAMPDwwAAACwAAAAAAQABAAACAkQBADs='
 
-dependencies = [
+js_dependencies = [
     'https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.3.1.js',
     'https://cdnjs.cloudflare.com/ajax/libs/jquery.lazyload/1.9.1/jquery.lazyload.min.js',
+    'https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.5/js/select2.full.min.js',
+]
+
+css_dependencies = [
+    'https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.5/css/select2.min.css',
 ]
 
 with open(report_file, 'w', encoding='utf-8') as fobj:
@@ -67,13 +72,47 @@ with open(report_file, 'w', encoding='utf-8') as fobj:
     fobj.write('<head>\n')
     fobj.write('<title>TTF Report - index.html</title>')
     fobj.write('  <style>\n%s\n</style>\n' % css)
-    for dependency in dependencies:
+    for dependency in js_dependencies:
         fobj.write('  <script src="%s"></script>\n' % dependency)
+    for dependency in css_dependencies:
+        fobj.write('  <link rel="stylesheet" href="%s">\n' % dependency)
     fobj.write('</head>\n')
     fobj.write('<body>\n')
     fobj.write(inject_script('inject1.html'))
 
-    for i, row in enumerate(lines):
+    for dropdown in 'ContentType', 'CountryOfBirth', 'Nationality', 'FamilyLinksGender', 'FamilyLinksStatus', 'Source':
+        fobj.write('<label for="{0}">{0}\n'.format(dropdown))
+        fobj.write('  <select name="{0}" id="{0}">\n'.format(dropdown))
+        for dropdown_value in sorted({row[key + dropdown] for row in rows for key in ['source_', 'match_']}):
+            fobj.write('    <option value="{0}">{0}</option>\n'.format(dropdown_value))
+        fobj.write('  </select>\n')
+        fobj.write('</label>\n')
+
+    fobj.write('''
+    <script>
+    $("select").change(function() {
+      var $select = $(this);
+      var searchDimension = $select.attr("name");
+      var searchTerm = $select.val();
+      $(".result").each(function() {
+        var $result = $(this);
+        var $metadatas = $result.find("[data-" + searchDimension + "]");
+        var hasSearchTerm = $metadatas.filter(function(i, metadata) {
+          var value = $(metadata).attr("data-" + searchDimension) || "";
+          return value.indexOf(searchTerm) !== -1;
+        }).length > 0;
+        
+        if (hasSearchTerm) {
+          $result.show();
+        } else {
+          $result.hide();
+        }
+      });
+    });
+    </script>
+    ''')
+
+    for i, row in enumerate(rows):
         if i >= args.max_results:
             break
 
@@ -110,12 +149,13 @@ with open(report_file, 'w', encoding='utf-8') as fobj:
         for prefix, metadata in ('source_', source_metadata), ('match_', match_metadata):
             fobj.write('    <tr>\n')
             for key in metadata_keys:
-                fobj.write('    <td>%s</td>\n' % metadata.get(prefix + key, 'NULL'))
+                fobj.write('    <td data-{0}="{1}">{1}</td>\n'.format(key, metadata.get(prefix + key, 'NULL')))
             fobj.write('    </tr>\n')
 
         fobj.write('  </table>\n')
         fobj.write('</div>\n')
 
     fobj.write('<script>$(document).ready(function(){$("img").lazyload();});</script>')
+    fobj.write('<script>$(document).ready(function(){$("select").select2({dropdownAutoWidth:true,width:"auto"});});</script>')
     fobj.write('</body>\n')
     fobj.write('</html>\n')
