@@ -12,6 +12,10 @@ parser.add_argument('--max_results', type=float, default=float("inf"))
 args = parser.parse_args()
 
 css = '''
+body {
+  margin: 0;
+}
+
 .result {
   margin: 1em;
   padding: 1em;
@@ -27,6 +31,13 @@ css = '''
 img {
   width: 150px;
   border: 2px solid black;
+}
+
+.controls {
+  position: fixed;
+  background-color: lightblue;
+  padding: 1em;
+  top: 0;
 }
 '''
 
@@ -67,6 +78,11 @@ css_dependencies = [
     'https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.5/css/select2.min.css',
 ]
 
+js_scripts = [
+    'confidence.js',
+    'dropdowns.js',
+]
+
 with open(report_file, 'w', encoding='utf-8') as fobj:
     fobj.write('<html>\n')
     fobj.write('<head>\n')
@@ -78,7 +94,15 @@ with open(report_file, 'w', encoding='utf-8') as fobj:
         fobj.write('  <link rel="stylesheet" href="%s">\n' % dependency)
     fobj.write('</head>\n')
     fobj.write('<body>\n')
-    fobj.write(inject_script('inject1.html'))
+
+    fobj.write('<div class="controls">\n')
+    fobj.write('''
+      <label for="confidence-min">Minimum</label> 
+      <input id="confidence-min" type="number" value="0.90">
+      <label for="confidence-max">Maximum</label>
+      <input id="confidence-max" type="number" value="1.0">
+      <input id="apply" type="button" value="Apply" title="Apply...">
+    ''')
 
     for dropdown in 'ContentType', 'CountryOfBirth', 'Nationality', 'FamilyLinksGender', 'FamilyLinksStatus', 'Source':
         fobj.write('<label for="{0}">{0}\n'.format(dropdown))
@@ -88,39 +112,7 @@ with open(report_file, 'w', encoding='utf-8') as fobj:
         fobj.write('  </select>\n')
         fobj.write('</label>\n')
 
-    fobj.write('''
-    <script>
-    $("select").change(function() {
-      var searchCriteria = [];
-      $("select").each(function() {
-        var $select = $(this);
-        searchCriteria.push({
-          dimension: $select.attr("name"),
-          term: $select.val(),
-        });
-      });
-
-      $(".result").each(function() {
-        var $result = $(this);
-
-        var hasAllSearchTerms = searchCriteria.every(function(search) {
-          var $metadatas = $result.find("[data-" + search.dimension + "]");
-          var hasSearchTerm = $metadatas.filter(function(i, metadata) {
-            var value = $(metadata).attr("data-" + search.dimension) || "";
-            return value.indexOf(search.term) !== -1;
-          }).length > 0;
-          return hasSearchTerm;
-        });
-
-        if (hasAllSearchTerms) {
-          $result.show();
-        } else {
-          $result.hide();
-        }
-      });
-    });
-    </script>
-    ''')
+    fobj.write('</div>\n')
 
     for i, row in enumerate(rows):
         if i >= args.max_results:
@@ -167,5 +159,7 @@ with open(report_file, 'w', encoding='utf-8') as fobj:
 
     fobj.write('<script>$(document).ready(function(){$("img").lazyload();});</script>')
     fobj.write('<script>$(document).ready(function(){$("select").select2({dropdownAutoWidth:true,width:"auto"});});</script>')
+    for js_script in js_scripts:
+        fobj.write('<script>%s</script>' % inject_script(js_script))
     fobj.write('</body>\n')
     fobj.write('</html>\n')
