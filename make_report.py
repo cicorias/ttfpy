@@ -11,41 +11,6 @@ parser.add_argument('--max_confidence', type=float, default=1)
 parser.add_argument('--max_results', type=float, default=float("inf"))
 args = parser.parse_args()
 
-css = '''
-body {
-  margin: 0;
-}
-
-.result {
-  margin: 1em;
-  padding: 1em;
-  background-color: silver;
-}
-
-.confidence {
-  font-weight: bold;
-  font-size: 20px;
-  color: darkred;
-}
-
-img {
-  width: 150px;
-  border: 2px solid black;
-}
-
-.controls {
-  position: fixed;
-  background-color: lightblue;
-  padding: 1em;
-  top: 0;
-  height: 5em;
-}
-
-.results {
-  padding-top: 7em;
-}
-'''
-
 report_file = args.report_file.name
 args.report_file.close()
 
@@ -55,7 +20,7 @@ metadata_excludes = {
 }
 
 
-def inject_script(path):
+def inject_content(path):
     dirpath = os.path.dirname(__file__)
     script = os.path.join(dirpath, path)
     print('injecting js file %s....' % script)
@@ -97,7 +62,7 @@ with open(report_file, 'w', encoding='utf-8') as fobj:
     fobj.write('<html>\n')
     fobj.write('<head>\n')
     fobj.write('<title>TTF Report - index.html</title>')
-    fobj.write('  <style>\n%s\n</style>\n' % css)
+    fobj.write('  <style>%s</style>\n' % inject_content('style.css'))
     for dependency in js_dependencies:
         fobj.write('  <script src="%s"></script>\n' % dependency)
     for dependency in css_dependencies:
@@ -171,6 +136,6 @@ with open(report_file, 'w', encoding='utf-8') as fobj:
     fobj.write('<script>$(document).ready(function(){$("img").lazyload();});</script>')
     fobj.write('<script>$(document).ready(function(){$("select").select2({dropdownAutoWidth:true,width:"auto"});});</script>')
     for js_script in js_scripts:
-        fobj.write('<script>%s</script>' % inject_script(js_script))
+        fobj.write('<script>%s</script>' % inject_content(js_script))
     fobj.write('</body>\n')
     fobj.write('</html>\n')
