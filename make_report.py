@@ -61,6 +61,7 @@ js_scripts = [
     'confidence.js',
     'dropdowns.js',
     'names.js',
+    'birthday.js',
 ]
 
 with open(report_file, 'w', encoding='utf-8') as fobj:
@@ -104,6 +105,12 @@ with open(report_file, 'w', encoding='utf-8') as fobj:
     fobj.write('''
     <div class="control">
       <input type="search" placeholder="Search for names" id="name-search">
+    </div>
+    ''')
+
+    fobj.write('''
+    <div class="control">
+      <input type="text" placeholder="Search for birthdays after (yyyy-mm-dd)" id="birthday-filter">
     </div>
     ''')
 

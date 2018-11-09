@@ -38,3 +38,11 @@ img {
 .hidden {
   visibility: hidden;
 }
+
+#birthday-filter {
+  width: 300px;
+}
+
+#name-search {
+  width: 300px;
+}
