@@ -3,6 +3,7 @@ import os
 from argparse import ArgumentParser, FileType
 from collections import Counter
 from csv import DictReader
+from urllib.parse import quote
 
 parser = ArgumentParser()
 parser.add_argument('tsv_file', type=FileType('r'))
@@ -125,14 +126,9 @@ with open(report_file, 'w', encoding='utf-8') as fobj:
             for (prefix, metadata) in [('source_', source_metadata), ('match_', match_metadata)]
             for key in metadata} - metadata_excludes)
 
-        source_url = source.replace("%", "%25")
-        match_url = match.replace("%", "%25")
-        source_url = source_url.replace(" ", "%20")
-        match_url = match_url.replace(" ", "%20")
-
         fobj.write('<div class="result" data-confidence="%s">\n' % confidence)
-        fobj.write('  <img class="source" src="%s" data-original="%s" title="%s">\n' % (image_placeholder, source_url, source))
-        fobj.write('  <img class="match" src="%s"  data-original="%s" title="%s">\n' % (image_placeholder, match_url, match))
+        fobj.write('  <img class="source" src="%s" data-original="%s" title="%s">\n' % (image_placeholder, quote(source), source))
+        fobj.write('  <img class="match" src="%s"  data-original="%s" title="%s">\n' % (image_placeholder, quote(match), match))
         fobj.write('  <span class="confidence">%s</span>\n' % confidence)
         fobj.write('  <table class="metadata">\n')
 
