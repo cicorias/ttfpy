@@ -15,9 +15,13 @@ $(document).ready(function() {
   $("#birthday-filter").change(function() {
     var birthdate = parseDate($(this).val());
 
-    function isOlder(node) {
+    function isInvalid(node) {
       var value = $(node).attr("data-DateOfBirth") || "";
-      if (!value || value === "NULL") return true;
+      return !value || value === "NULL";
+    }
+
+    function isYounger(node) {
+      var value = $(node).attr("data-DateOfBirth") || "";
       return parseDate(value) > birthdate;
     }
 
@@ -25,11 +29,16 @@ $(document).ready(function() {
       var $result = $(this);
 
       var $metadatas = $result.find("[data-DateOfBirth]");
-      var isFirstOlder = isOlder($metadatas[0]);
-      var isSecondOlder = isOlder($metadatas[1]);
-      var areAllOlder = isFirstOlder || isSecondOlder;
+      if (isInvalid($metadatas[0]) || isInvalid($metadatas[1])) {
+        $result.show();
+        return;
+      }
 
-      if (areAllOlder) {
+      var isFirstYounger = isYounger($metadatas[0]);
+      var isSecondYounger = isYounger($metadatas[1]);
+      var areAllYounger = isFirstYounger && isSecondYounger;
+
+      if (areAllYounger) {
         $result.show();
       } else {
         $result.hide();
