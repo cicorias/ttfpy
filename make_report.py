@@ -60,11 +60,8 @@ css_dependencies = [
 ]
 
 js_scripts = [
-    # 'confidence.js',
-    'dropdowns.js',
-    'names.js',
-    'birthday.js',
-    # 'applyFilters.js',
+    'injectJavascript.js',
+
 ]
 
 with open(report_file, 'w', encoding='utf-8') as fobj:

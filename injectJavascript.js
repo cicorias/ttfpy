@@ -8,9 +8,6 @@ $(document).ready(function () {
 
   var searchExpression = null;
   var searchCriteria = [];
- 
-
-
 
   function doIt (){
     var $search = $("#name-search");
@@ -21,7 +18,7 @@ $(document).ready(function () {
       alert('error on search expression: %s', e);
     }
 
-    var searchCriteria = [];
+    searchCriteria = [];
     $("select").each(function() {
       var $select = $(this);
       searchCriteria.push({
@@ -29,6 +26,8 @@ $(document).ready(function () {
         term: $select.val(),
       });
     });
+
+
 
     console.log('running all filters...');
     $(".result").each(function () {
@@ -42,8 +41,10 @@ $(document).ready(function () {
 
       var isDropDown = hasAllSearchTerms($result, searchCriteria);
 
-      console.log('anyColumnMatches %s  -  %s', anyColumnMatches, confidenceMatches);
-      if (anyColumnMatches && confidenceMatches && isDropDown) {
+      var ageOk = isAgeOk($result);
+
+      console.log('anyColumnMatches %s  -  conf: %s  -  young: %s', anyColumnMatches, confidenceMatches, ageOk);
+      if (anyColumnMatches && confidenceMatches && isDropDown && ageOk) {
         console.log('showing');
         $result.show();
       } else {
@@ -69,6 +70,35 @@ $(document).ready(function () {
     console.log('selections changed');
     doIt();
   });
+
+  $("#birthday-filter").change(function() {
+    console.log('birthday changed');
+    doIt();
+  });
+
+  function isInvalidDate(node) {
+    var value = $(node).attr("data-DateOfBirth") || "";
+    return !value || value === "NULL";
+  }
+
+  function isYoungerDate(node) {
+    var value = $(node).attr("data-DateOfBirth") || "";
+    var birthdate = parseDate($("#birthday-filter").val());
+    return parseDate(value) > birthdate;
+  }
+
+  function parseDate(date) {
+    if (!date) return null;
+    var parts = date.split(".");
+    var day = parseInt(parts[0], 10);
+    var month = parseInt(parts[1], 10);
+    var year = parseInt(parts[2], 10);
+    var date = new Date();
+    date.setDate(day);
+    date.setMonth(month - 1);
+    date.setYear(year);
+    return date;
+  }
 
   function getColumnMatches($result) {
     console.log('get column matches');
@@ -96,6 +126,18 @@ $(document).ready(function () {
     });
 
     return hasAllSearchTerms;
+  }
+
+  function isAgeOk ($result){
+    var $metadatas = $result.find("[data-DateOfBirth]");
+    if (isInvalidDate($metadatas[0]) || isInvalidDate($metadatas[1])) {
+      return true;
+    }
+
+    if (isYoungerDate($metadatas[0]) && isYoungerDate($metadatas[1]))
+      return false;
+    else 
+      return true;
   }
 
   var timeout;
