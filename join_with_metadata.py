@@ -25,7 +25,8 @@ metadata_keys = sorted(metadata_reader.fieldnames)
 
 output = DictWriter(stdout, fieldnames=['source', 'match', 'confidence'] +
                                        ['source_' + key for key in metadata_keys] +
-                                       ['match_' + key for key in metadata_keys])
+                                       ['match_' + key for key in metadata_keys],
+                    delimiter='\t')
 output.writeheader()
 
 for (source, match, confidence) in CsvReader(args.tsv_file, delimiter=args.tsv_file_delimiter):
