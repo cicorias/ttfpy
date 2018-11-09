@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 from argparse import ArgumentParser, FileType
-from csv import reader as CsvReader, DictReader, DictWriter
+from csv import reader as csvreader, DictReader, DictWriter
 from sys import stderr, stdout
 
 parser = ArgumentParser()
@@ -29,7 +29,7 @@ output = DictWriter(stdout, fieldnames=['source', 'match', 'confidence'] +
                     delimiter='\t')
 output.writeheader()
 
-for (source, match, confidence) in CsvReader(args.tsv_file, delimiter=args.tsv_file_delimiter):
+for (source, match, confidence) in csvreader(args.tsv_file, delimiter=args.tsv_file_delimiter):
     source = source.replace('/images', '/hackfest-data/ttf-photos')
     match = match.replace('/images', '/hackfest-data/ttf-photos')
 
