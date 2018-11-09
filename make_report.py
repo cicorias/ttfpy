@@ -91,18 +91,28 @@ with open(report_file, 'w', encoding='utf-8') as fobj:
     fobj.write('''
     <script>
     $("select").change(function() {
-      var $select = $(this);
-      var searchDimension = $select.attr("name");
-      var searchTerm = $select.val();
+      var searchCriteria = [];
+      $("select").each(function() {
+        var $select = $(this);
+        searchCriteria.push({
+          dimension: $select.attr("name"),
+          term: $select.val(),
+        });
+      });
+
       $(".result").each(function() {
         var $result = $(this);
-        var $metadatas = $result.find("[data-" + searchDimension + "]");
-        var hasSearchTerm = $metadatas.filter(function(i, metadata) {
-          var value = $(metadata).attr("data-" + searchDimension) || "";
-          return value.indexOf(searchTerm) !== -1;
-        }).length > 0;
-        
-        if (hasSearchTerm) {
+
+        var hasAllSearchTerms = searchCriteria.every(function(search) {
+          var $metadatas = $result.find("[data-" + search.dimension + "]");
+          var hasSearchTerm = $metadatas.filter(function(i, metadata) {
+            var value = $(metadata).attr("data-" + search.dimension) || "";
+            return value.indexOf(search.term) !== -1;
+          }).length > 0;
+          return hasSearchTerm;
+        });
+
+        if (hasAllSearchTerms) {
           $result.show();
         } else {
           $result.hide();
