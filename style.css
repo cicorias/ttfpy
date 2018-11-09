@@ -1,0 +1,32 @@
+body {
+  margin: 0;
+}
+
+.result {
+  margin: 1em;
+  padding: 1em;
+  background-color: silver;
+}
+
+.confidence {
+  font-weight: bold;
+  font-size: 20px;
+  color: darkred;
+}
+
+img {
+  width: 150px;
+  border: 2px solid black;
+}
+
+.controls {
+  position: fixed;
+  background-color: lightblue;
+  padding: 1em;
+  top: 0;
+  height: 5em;
+}
+
+.results {
+  padding-top: 7em;
+}

@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import os
 from argparse import ArgumentParser, FileType
+from collections import Counter
 from csv import DictReader
 
 parser = ArgumentParser()
@@ -11,30 +12,16 @@ parser.add_argument('--max_confidence', type=float, default=1)
 parser.add_argument('--max_results', type=float, default=float("inf"))
 args = parser.parse_args()
 
-css = '''
-.result {
-  margin: 1em;
-  padding: 1em;
-  background-color: silver;
-}
-
-.confidence {
-  font-weight: bold;
-  font-size: 20px;
-  color: darkred;
-}
-
-img {
-  width: 150px;
-  border: 2px solid black;
-}
-'''
-
 report_file = args.report_file.name
 args.report_file.close()
 
+metadata_excludes = {
+    'ThumbnailImageUrl',
+    'WatermarkedImageUrl',
+}
 
-def inject_script(path):
+
+def inject_content(path):
     dirpath = os.path.dirname(__file__)
     script = os.path.join(dirpath, path)
     print('injecting js file %s....' % script)
@@ -44,36 +31,76 @@ def inject_script(path):
     return data
 
 
-lines = []
+rows = []
 for row in DictReader(args.tsv_file, delimiter='\t'):
     source = row['source'].strip()
     match = row['match'].strip()
     confidence = float(row['confidence'])
     if source == match or confidence >= args.max_confidence or confidence <= args.min_confidence:
         continue
-    lines.append(row)
+    rows.append(row)
 
-lines.sort(key=lambda r: float(r['confidence']), reverse=True)
+rows.sort(key=lambda r: float(r['confidence']), reverse=True)
 
 image_placeholder = 'data:image/gif;base64,R0lGODdhAQABAPAAAMPDwwAAACwAAAAAAQABAAACAkQBADs='
 
-dependencies = [
+js_dependencies = [
     'https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.3.1.js',
     'https://cdnjs.cloudflare.com/ajax/libs/jquery.lazyload/1.9.1/jquery.lazyload.min.js',
+    'https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.5/js/select2.full.min.js',
+]
+
+css_dependencies = [
+    'https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.5/css/select2.min.css',
+]
+
+js_scripts = [
+    'confidence.js',
+    'dropdowns.js',
 ]
 
 with open(report_file, 'w', encoding='utf-8') as fobj:
     fobj.write('<html>\n')
     fobj.write('<head>\n')
     fobj.write('<title>TTF Report - index.html</title>')
-    fobj.write('  <style>\n%s\n</style>\n' % css)
-    for dependency in dependencies:
+    fobj.write('  <style>%s</style>\n' % inject_content('style.css'))
+    for dependency in js_dependencies:
         fobj.write('  <script src="%s"></script>\n' % dependency)
+    for dependency in css_dependencies:
+        fobj.write('  <link rel="stylesheet" href="%s">\n' % dependency)
     fobj.write('</head>\n')
     fobj.write('<body>\n')
-    fobj.write(inject_script('inject1.html'))
 
-    for i, row in enumerate(lines):
+    fobj.write('<div class="controls">\n')
+    fobj.write('''
+      <div class="control">
+        <label for="confidence-min">Minimum
+          <input id="confidence-min" type="number" value="0.90">
+        </label>
+        <label for="confidence-max">Maximum
+          <input id="confidence-max" type="number" value="1.0">
+        </label>
+        <input id="apply" type="button" value="Apply" title="Apply...">
+      </div>
+    ''')
+
+    fobj.write('<div class="control">\n')
+    for dropdown in 'ContentType', 'CountryOfBirth', 'Nationality', 'FamilyLinksGender', 'FamilyLinksStatus', 'Source':
+        fobj.write('<label for="{0}">{0}\n'.format(dropdown))
+        fobj.write('  <select name="{0}" id="{0} value="Apply filters" title="Apply filters">">\n'.format(dropdown))
+        fobj.write('    <option value="">ALL</option>\n')
+        dropdown_values = Counter(row[key + dropdown] for row in rows for key in ['source_', 'match_'])
+        total_count = sum(dropdown_values.values())
+        for dropdown_value, count in dropdown_values.most_common():
+            fobj.write('    <option value="{0}">{0} ({1:.0f}%)</option>\n'.format(dropdown_value, count / total_count * 100.))
+        fobj.write('  </select>\n')
+        fobj.write('</label>\n')
+    fobj.write('</div>\n')
+
+    fobj.write('</div>\n')
+
+    fobj.write('<div class="results">\n')
+    for i, row in enumerate(rows):
         if i >= args.max_results:
             break
 
@@ -89,7 +116,7 @@ with open(report_file, 'w', encoding='utf-8') as fobj:
         metadata_keys = sorted({
             key.replace(prefix, '')
             for (prefix, metadata) in [('source_', source_metadata), ('match_', match_metadata)]
-            for key in metadata})
+            for key in metadata} - metadata_excludes)
 
         source_url = source.replace("%", "%25")
         match_url = match.replace("%", "%25")
@@ -110,12 +137,16 @@ with open(report_file, 'w', encoding='utf-8') as fobj:
         for prefix, metadata in ('source_', source_metadata), ('match_', match_metadata):
             fobj.write('    <tr>\n')
             for key in metadata_keys:
-                fobj.write('    <td>%s</td>\n' % metadata.get(prefix + key, 'NULL'))
+                fobj.write('    <td data-{0}="{1}">{1}</td>\n'.format(key, metadata.get(prefix + key, 'NULL')))
             fobj.write('    </tr>\n')
 
         fobj.write('  </table>\n')
         fobj.write('</div>\n')
+    fobj.write('</div>\n')
 
     fobj.write('<script>$(document).ready(function(){$("img").lazyload();});</script>')
+    fobj.write('<script>$(document).ready(function(){$("select").select2({dropdownAutoWidth:true,width:"auto"});});</script>')
+    for js_script in js_scripts:
+        fobj.write('<script>%s</script>' % inject_content(js_script))
     fobj.write('</body>\n')
     fobj.write('</html>\n')
