@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+import os
 from argparse import ArgumentParser, FileType
 from csv import DictReader
 
@@ -9,6 +10,20 @@ parser.add_argument('--min_confidence', type=float, default=0.75)
 parser.add_argument('--max_confidence', type=float, default=1)
 parser.add_argument('--max_results', type=float, default=float("inf"))
 args = parser.parse_args()
+
+report_file = args.report_file.name
+args.report_file.close()
+
+dirpath = os.getcwd()
+
+def injectScript():
+    print('injecting js file....')
+    script = os.path.join( dirpath ,'inject1.html')
+    data = None
+    with open( script, 'r') as myfile:
+        data=myfile.read()
+
+    return data
 
 report_file = args.report_file.name
 args.report_file.close()
@@ -46,6 +61,7 @@ with open(report_file, 'w', encoding='utf-8') as fobj:
     fobj.write('<script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.3.1.js"></script>\n')
     fobj.write('</head>\n')
     fobj.write('<body>\n')
+    fobj.write(injectScript())
 
     for i, row in enumerate(lines):
         if i >= args.max_results:

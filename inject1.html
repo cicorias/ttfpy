@@ -1,0 +1,16 @@
+<script>
+    $(document).ready(function () {
+        $("#confidence").change( function () {
+            var value = $(this).val();
+            $(".result").filter(function () {
+                $(this).toggle($(this).attr("data-confidence") > value);
+            });
+        });
+    });
+
+    function applyFilters() {
+        ; // TODO:
+    }
+</script>
+<input id="confidence" type="text">
+<input id="apply" type="button" value="Apply" title="Apply..." onclick="applyFilters()">
