@@ -34,14 +34,10 @@ $(document).ready(function() {
         return;
       }
 
-      var isFirstYounger = isYounger($metadatas[0]);
-      var isSecondYounger = isYounger($metadatas[1]);
-      var areAllYounger = isFirstYounger && isSecondYounger;
-
-      if (areAllYounger) {
-        $result.show();
-      } else {
+      if (isYounger($metadatas[0]) && isYounger($metadatas[1])) {
         $result.hide();
+      } else {
+        $result.show();
       }
     });
   });
