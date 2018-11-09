@@ -142,6 +142,7 @@ with open(report_file, 'w', encoding='utf-8') as fobj:
         fobj.write('  <img class="source" src="%s" data-original="%s" title="%s">\n' % (image_placeholder, quote(source), source))
         fobj.write('  <img class="match" src="%s"  data-original="%s" title="%s">\n' % (image_placeholder, quote(match), match))
         fobj.write('  <span class="confidence">%s</span>\n' % confidence)
+        fobj.write('  <a name="{0}" href="#{0}" title="Link to match">&para;</a>\n'.format('%s-%s' % (quote(source.replace('/', '__')), quote(match.replace('/', '__')))))
         fobj.write('  <table class="metadata">\n')
 
         fobj.write('    <tr>\n')
