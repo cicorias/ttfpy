@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import os
 from argparse import ArgumentParser, FileType
+from collections import Counter
 from csv import DictReader
 
 parser = ArgumentParser()
@@ -81,9 +82,11 @@ with open(report_file, 'w', encoding='utf-8') as fobj:
 
     for dropdown in 'ContentType', 'CountryOfBirth', 'Nationality', 'FamilyLinksGender', 'FamilyLinksStatus', 'Source':
         fobj.write('<label for="{0}">{0}\n'.format(dropdown))
-        fobj.write('  <select name="{0}" id="{0}">\n'.format(dropdown))
-        for dropdown_value in sorted({row[key + dropdown] for row in rows for key in ['source_', 'match_']}):
-            fobj.write('    <option value="{0}">{0}</option>\n'.format(dropdown_value))
+        fobj.write('  <select name="{0}" id="{0} value="Apply filters" title="Apply filters">">\n'.format(dropdown))
+        dropdown_values = Counter(row[key + dropdown] for row in rows for key in ['source_', 'match_'])
+        total_count = sum(dropdown_values.values())
+        for dropdown_value, count in dropdown_values.most_common():
+            fobj.write('    <option value="{0}">{0} ({1:.0f}%)</option>\n'.format(dropdown_value, count / total_count * 100.))
         fobj.write('  </select>\n')
         fobj.write('</label>\n')
     fobj.write('</div>\n')
