@@ -49,10 +49,12 @@ js_dependencies = [
     'https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.3.1.js',
     'https://cdnjs.cloudflare.com/ajax/libs/jquery.lazyload/1.9.1/jquery.lazyload.min.js',
     'https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.5/js/select2.full.min.js',
+    'https://code.jquery.com/ui/1.12.1/jquery-ui.js',
 ]
 
 css_dependencies = [
     'https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.5/css/select2.min.css',
+    'https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css',
 ]
 
 js_scripts = [
@@ -75,14 +77,14 @@ with open(report_file, 'w', encoding='utf-8') as fobj:
 
     fobj.write('<div class="controls">\n')
     fobj.write('''
-      <div class="control">
-        <label for="confidence-min">Minimum
-          <input id="confidence-min" type="number" value="0.90">
-        </label>
-        <label for="confidence-max">Maximum
-          <input id="confidence-max" type="number" value="1.0">
-        </label>
-        <input id="apply" type="button" value="Apply" title="Apply...">
+        <div class="control">
+        <div>
+          <label for="amount">Confidence Range</label>
+          <input type="text" id="amount" readonly style="border:0; color:#f6931f; font-weight:bold;">
+        </div>        <div id="slider-range" class="slider"></div>
+
+        <input id="confidence-min" type="number" class="hidden" value="0.90">
+        <input id="confidence-max" type="number" class="hidden" value="1.0">
       </div>
     ''')
 

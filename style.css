@@ -29,3 +29,12 @@ img {
 .results {
   padding-top: 8em;
 }
+
+.slider {
+  width: 200px;
+  height: 50px;
+}
+
+.hidden {
+  visibility: hidden;
+}
