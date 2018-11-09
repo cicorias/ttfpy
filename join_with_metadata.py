@@ -20,7 +20,7 @@ for row in DictReader(args.metadata_file, delimiter=args.metadata_file_delimiter
     except Exception as ex:
         print(ex, file=stderr)
 
-metadata_keys = sorted(metadata.keys())
+metadata_keys = sorted(all_metadata.keys())
 
 output = DictWriter(stdout, fieldnames=
   ['source', 'match', 'confidence'] +
