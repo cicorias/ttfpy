@@ -74,10 +74,12 @@ with open(report_file, 'w', encoding='utf-8') as fobj:
     fobj.write('<div class="controls">\n')
     fobj.write('''
       <div class="control">
-        <label for="confidence-min">Minimum</label>
-        <input id="confidence-min" type="number" value="0.90">
-        <label for="confidence-max">Maximum</label>
-        <input id="confidence-max" type="number" value="1.0">
+        <label for="confidence-min">Minimum
+          <input id="confidence-min" type="number" value="0.90">
+        </label>
+        <label for="confidence-max">Maximum
+          <input id="confidence-max" type="number" value="1.0">
+        </label>
         <input id="apply" type="button" value="Apply" title="Apply...">
       </div>
     ''')
