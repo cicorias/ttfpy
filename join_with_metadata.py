@@ -7,7 +7,7 @@ parser = ArgumentParser()
 parser.add_argument('tsv_file', type=FileType('r'))
 parser.add_argument('metadata_file', type=FileType('r', encoding='utf-16'))
 parser.add_argument('--tsv_file_delimiter', default='\t')
-parser.add_argument('--metadata_file_delimiter', default=';')
+parser.add_argument('--metadata_file_delimiter', default='\t')
 args = parser.parse_args()
 
 all_metadata = {}
