@@ -1,71 +1,28 @@
+#!/usr/bin/env python3
 from argparse import ArgumentParser, FileType
 from csv import DictReader
-from collections import defaultdict
 
 parser = ArgumentParser()
 parser.add_argument('tsv_file', type=FileType('r'))
 parser.add_argument('report_file', type=FileType('w'))
-parser.add_argument('--metadata_file', type=FileType('r', encoding="utf-8"), default=None)
 parser.add_argument('--min_confidence', type=float, default=0.75)
 parser.add_argument('--max_confidence', type=float, default=1)
 parser.add_argument('--max_results', type=float, default=float("inf"))
 args = parser.parse_args()
 
-tsv_file = args.tsv_file.name
-args.tsv_file.close()
 report_file = args.report_file.name
 args.report_file.close()
-max_confidence = args.max_confidence
-min_confidence = args.min_confidence
-max_results = args.max_results
-
-metadata = {}
-if args.metadata_file is not None:
-    for row in DictReader(args.metadata_file, delimiter="\t"):
-        try:
-            image_path = row.get('ImagePath', row["ThumbnailImageUrl"])[1:].replace('/', '__')
-            image_path = image_path.replace(".thumb", "")
-            image_path = '/hackfest-data/ttf-photos/' + image_path
-            metadata[image_path] = row
-        except Exception:
-            pass
-
-    args.metadata_file.close()
-
-matches = defaultdict(lambda: defaultdict(list))
-
-with open(tsv_file) as fobj:
-    for line in fobj:
-        (source, match, confidence) = line.strip().split('\t')
-        source = source.strip()
-        match = match.strip()
-        confidence = float(confidence.strip())
-        if source == match or confidence >= max_confidence or confidence <= min_confidence:
-            continue
-
-        matches[source][match] = confidence
 
 lines = []
-for source in list(matches):
-    for match in matches[source]:
-        confidence = matches[source][match]
-        lines.append((source, match, confidence))
+for row in DictReader(args.tsv_file, delimiter='\t'):
+    source = row['source'].strip()
+    match = row['match'].strip()
+    confidence = float(row['confidence'])
+    if source == match or confidence >= args.max_confidence or confidence <= args.min_confidence:
+        continue
+    lines.append(row)
 
-lines.sort(key=lambda t: float(t[2]), reverse=True)
-
-metadata_keys = (
-  'FamilyLinksFullName',
-  'FamilyLinksGender',
-  'FatherName',
-  'MotherName',
-  'DateOfBirth',
-  'CountryOfBirth',
-  'PlaceOfBirth',
-  'CountryOfOrigin',
-  'Source',
-  'FamilyLinksStatus',
-  'ContentType',
-)
+lines.sort(key=lambda r: float(r['confidence']), reverse=True)
 
 with open(report_file, 'w', encoding='utf-8') as fobj:
     fobj.write('<html>\n')
@@ -86,28 +43,36 @@ with open(report_file, 'w', encoding='utf-8') as fobj:
     fobj.write('      border: 2px solid black;\n')
     fobj.write('    }\n')
     fobj.write('  </style>\n')
-    fobj.write('<script src=\"https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.3.1.js\"></script>')
+    fobj.write('<script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.3.1.js"></script>\n')
     fobj.write('</head>\n')
     fobj.write('<body>\n')
 
-    for i, (source, match, confidence) in enumerate(lines):
-        if i >= max_results:
+    for i, row in enumerate(lines):
+        if i >= args.max_results:
             break
+
+        source = row['source']
+        match = row['match']
+        confidence = row['confidence']
 
         source = source.replace('/images', '/hackfest-data/ttf-photos')
         match = match.replace('/images', '/hackfest-data/ttf-photos')
 
-        source_metadata = metadata.get(source, {})
-        match_metadata = metadata.get(match, {})
+        source_metadata = {key: value for (key, value) in row.items() if key.startswith('source_')}
+        match_metadata = {key: value for (key, value) in row.items() if key.startswith('match_')}
+        metadata_keys = sorted({
+            key.replace(prefix, '')
+            for (prefix, metadata) in ('source_', source_metadata), ('match_', match_metadata)
+            for key in metadata})
 
-        source_url = source.replace("/hackfest-data/ttf-photos", "C:\g\irc\py\\ttf-html\images") # "http://172.22.41.40:9999")
-        match_url = match.replace("/hackfest-data/ttf-photos", "C:\g\irc\py\\ttf-html\images") # "http://172.22.41.40:9999")
+        source_url = source.replace("/hackfest-data/ttf-photos", "http://172.22.41.40:9999")
+        match_url = match.replace("/hackfest-data/ttf-photos", "http://172.22.41.40:9999")
         source_url = source_url.replace("%", "%25")
         match_url = match_url.replace("%", "%25")
         source_url = source_url.replace(" ", "%20")
         match_url = match_url.replace(" ", "%20")
 
-        fobj.write('<div class="result" data-confidence="%s" >\n' % confidence)
+        fobj.write('<div class="result" data-confidence="%s">\n' % confidence)
         fobj.write('  <img class="source" src="%s" title="%s">\n' % (source_url, source))
         fobj.write('  <img class="match" src="%s" title="%s">\n' % (match_url, match))
         fobj.write('  <span class="confidence">%s</span>\n' % confidence)
@@ -118,10 +83,10 @@ with open(report_file, 'w', encoding='utf-8') as fobj:
             fobj.write('      <th scope="col">%s</th>\n' % key)
         fobj.write('    </tr>\n')
 
-        for mm in source_metadata, match_metadata:
+        for prefix, metadata in ('source_', source_metadata), ('match_', match_metadata):
             fobj.write('    <tr>\n')
             for key in metadata_keys:
-                fobj.write('    <td>%s</td>\n' % mm.get(key, 'NULL'))
+                fobj.write('    <td>%s</td>\n' % metadata.get(prefix + key, 'NULL'))
             fobj.write('    </tr>\n')
 
         fobj.write('  </table>\n')
