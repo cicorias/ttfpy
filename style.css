@@ -3,7 +3,7 @@ body {
 }
 
 .result {
-  margin: 1em;
+  margin: 1em 0;
   padding: 1em;
   background-color: silver;
 }
@@ -24,6 +24,7 @@ img {
   background-color: lightblue;
   padding: 1em;
   top: 0;
+  width: 100%;
 }
 
 .results {
