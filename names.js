@@ -7,16 +7,28 @@ $(document).ready(function () {
   ];
 
   var searchExpression = null;
+  var searchCriteria = [];
+ 
+
+
 
   function doIt (){
-
     var $search = $("#name-search");
     try {
       searchExpression = new RegExp($search.val(), "gi");
     } catch (e) {
       console.error(e);
       alert('error on search expression: %s', e);
-    }    
+    }
+
+    var searchCriteria = [];
+    $("select").each(function() {
+      var $select = $(this);
+      searchCriteria.push({
+        dimension: $select.attr("name"),
+        term: $select.val(),
+      });
+    });
 
     console.log('running all filters...');
     $(".result").each(function () {
@@ -28,8 +40,10 @@ $(document).ready(function () {
       var max = $("#confidence-max").val();
       var confidenceMatches = shouldApplyConfidence($result, min, max);
 
+      var isDropDown = hasAllSearchTerms($result, searchCriteria);
+
       console.log('anyColumnMatches %s  -  %s', anyColumnMatches, confidenceMatches);
-      if (anyColumnMatches && confidenceMatches) {
+      if (anyColumnMatches && confidenceMatches && isDropDown) {
         console.log('showing');
         $result.show();
       } else {
@@ -39,7 +53,6 @@ $(document).ready(function () {
     });
   }
 
-  
   function shouldApplyConfidence(item, min, max) {
     console.log('should Apply Confidence');
     var level = item.attr("data-confidence");
@@ -49,6 +62,11 @@ $(document).ready(function () {
 
   $("#name-search").change(function () {
     console.log('name search changed');
+    doIt();
+  });
+
+  $("select").change(function() {
+    console.log('selections changed');
     doIt();
   });
 
@@ -64,6 +82,20 @@ $(document).ready(function () {
     });
 
     return anyColumnMatches;
+  }
+
+  function hasAllSearchTerms ($result, searchCriteria) {
+    console.log('has all search terms');
+    var hasAllSearchTerms = searchCriteria.every(function(search) {
+      var $metadatas = $result.find("[data-" + search.dimension + "]");
+      var hasSearchTerm = $metadatas.filter(function(i, metadata) {
+        var value = $(metadata).attr("data-" + search.dimension) || "";
+        return value.indexOf(search.term) !== -1;
+      }).length > 0;
+      return hasSearchTerm;
+    });
+
+    return hasAllSearchTerms;
   }
 
   var timeout;
