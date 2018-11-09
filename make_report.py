@@ -33,19 +33,16 @@ img {
 report_file = args.report_file.name
 args.report_file.close()
 
-dirpath = os.getcwd()
 
-def injectScript():
-    print('injecting js file....')
-    script = os.path.join( dirpath ,'inject1.html')
-    data = None
-    with open( script, 'r') as myfile:
-        data=myfile.read()
+def inject_script(path):
+    dirpath = os.path.dirname(__file__)
+    script = os.path.join(dirpath, path)
+    print('injecting js file %s....' % script)
+    with open(script, 'r') as myfile:
+        data = myfile.read()
 
     return data
 
-report_file = args.report_file.name
-args.report_file.close()
 
 lines = []
 for row in DictReader(args.tsv_file, delimiter='\t'):
@@ -74,7 +71,7 @@ with open(report_file, 'w', encoding='utf-8') as fobj:
         fobj.write('  <script src="%s"></script>\n' % dependency)
     fobj.write('</head>\n')
     fobj.write('<body>\n')
-    fobj.write(injectScript())
+    fobj.write(inject_script('inject1.html'))
 
     for i, row in enumerate(lines):
         if i >= args.max_results:
@@ -94,8 +91,6 @@ with open(report_file, 'w', encoding='utf-8') as fobj:
             for (prefix, metadata) in [('source_', source_metadata), ('match_', match_metadata)]
             for key in metadata})
 
-        #source_url = source.replace("/hackfest-data/ttf-photos", "http://172.22.41.40:9999")
-        #match_url = match.replace("/hackfest-data/ttf-photos", "http://172.22.41.40:9999")
         source_url = source.replace("%", "%25")
         match_url = match.replace("%", "%25")
         source_url = source_url.replace(" ", "%20")
