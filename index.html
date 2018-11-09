@@ -1,0 +1,422 @@
+<html>
+<head>
+<title>TTF Report - index.html</title>  <style>
+    .result {
+      margin: 1em;
+      padding: 1em;
+      background-color: silver;
+    }
+    .confidence {
+      font-weight: bold;
+      font-size: 20px;
+      color: darkred;
+    }
+    img {
+      width: 150px;
+      border: 2px solid black;
+    }
+  </style>
+<script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.3.1.js"></script>
+</head>
+<body>
+<script>
+    $(document).ready(function () {
+        // $("#confidence").change( function () {
+        //     var value = $(this).val();
+        //     $(".result").filter(function () {
+        //         if ( value )
+        //         $(this).toggle($(this).attr("data-confidence") > value);
+        //     });
+        // });
+
+      $('#apply').on('click', function () {
+        console.log('apply min max confidence levels')
+        var min = $("#confidence-min").val();
+        var max = $("#confidence-max").val();
+        console.log('using a min max of %s - %s', min, max)
+        $(".result").filter(function () {
+          var level = $(this).attr("data-confidence");
+          console.log('level is %s', level);
+          if (min && max && (level > min && level < max) ) {
+            $(this).show();
+          }
+          else {
+            $(this).hide();
+          }
+        });
+      });
+    });
+</script>
+<label for="confidence-min">Minimum</label> 
+<input id="confidence-min" type="text" value="0.90">
+<label for="confidence-max">Maximum</label>
+<input id="confidence-max" type="text" value="1.0">
+<input id="apply" type="button" value="Apply" title="Apply...">
+<div class="result" data-confidence="0.984567345">
+  <img class="source" src="/hackfest-data/ttf-photos/image5.jpg" title="/hackfest-data/ttf-photos/image5.jpg">
+  <img class="match" src="/hackfest-data/ttf-photos/image1.jpg" title="/hackfest-data/ttf-photos/image1.jpg">
+  <span class="confidence">0.984567345</span>
+  <table class="metadata">
+    <tr>
+      <th scope="col">Column1</th>
+      <th scope="col">ContentType</th>
+      <th scope="col">CountryOfBirth</th>
+      <th scope="col">DateOfBirth</th>
+      <th scope="col">FamilyLinksFullName</th>
+      <th scope="col">FamilyLinksGender</th>
+      <th scope="col">FamilyLinksStatus</th>
+      <th scope="col">FatherName</th>
+      <th scope="col">FullNameTransliterated</th>
+      <th scope="col">MotherName</th>
+      <th scope="col">Nationality</th>
+      <th scope="col">PictureReference</th>
+      <th scope="col">PlaceOfBirth</th>
+      <th scope="col">Source</th>
+      <th scope="col">ThumbnailImageUrl</th>
+      <th scope="col">WatermarkedImageUrl</th>
+    </tr>
+    <tr>
+    <td>NULL</td>
+    <td>NULL</td>
+    <td>NULL</td>
+    <td>NULL</td>
+    <td>NULL</td>
+    <td>NULL</td>
+    <td>NULL</td>
+    <td>NULL</td>
+    <td>NULL</td>
+    <td>NULL</td>
+    <td>NULL</td>
+    <td>NULL</td>
+    <td>NULL</td>
+    <td>NULL</td>
+    <td>NULL</td>
+    <td>NULL</td>
+    </tr>
+    <tr>
+    <td>NULL</td>
+    <td>NULL</td>
+    <td>NULL</td>
+    <td>NULL</td>
+    <td>NULL</td>
+    <td>NULL</td>
+    <td>NULL</td>
+    <td>NULL</td>
+    <td>NULL</td>
+    <td>NULL</td>
+    <td>NULL</td>
+    <td>NULL</td>
+    <td>NULL</td>
+    <td>NULL</td>
+    <td>NULL</td>
+    <td>NULL</td>
+    </tr>
+  </table>
+</div>
+<div class="result" data-confidence="0.98454356">
+  <img class="source" src="/hackfest-data/ttf-photos/image4.jpg" title="/hackfest-data/ttf-photos/image4.jpg">
+  <img class="match" src="/hackfest-data/ttf-photos/image1.jpg" title="/hackfest-data/ttf-photos/image1.jpg">
+  <span class="confidence">0.98454356</span>
+  <table class="metadata">
+    <tr>
+      <th scope="col">Column1</th>
+      <th scope="col">ContentType</th>
+      <th scope="col">CountryOfBirth</th>
+      <th scope="col">DateOfBirth</th>
+      <th scope="col">FamilyLinksFullName</th>
+      <th scope="col">FamilyLinksGender</th>
+      <th scope="col">FamilyLinksStatus</th>
+      <th scope="col">FatherName</th>
+      <th scope="col">FullNameTransliterated</th>
+      <th scope="col">MotherName</th>
+      <th scope="col">Nationality</th>
+      <th scope="col">PictureReference</th>
+      <th scope="col">PlaceOfBirth</th>
+      <th scope="col">Source</th>
+      <th scope="col">ThumbnailImageUrl</th>
+      <th scope="col">WatermarkedImageUrl</th>
+    </tr>
+    <tr>
+    <td>NULL</td>
+    <td>NULL</td>
+    <td>NULL</td>
+    <td>NULL</td>
+    <td>NULL</td>
+    <td>NULL</td>
+    <td>NULL</td>
+    <td>NULL</td>
+    <td>NULL</td>
+    <td>NULL</td>
+    <td>NULL</td>
+    <td>NULL</td>
+    <td>NULL</td>
+    <td>NULL</td>
+    <td>NULL</td>
+    <td>NULL</td>
+    </tr>
+    <tr>
+    <td>NULL</td>
+    <td>NULL</td>
+    <td>NULL</td>
+    <td>NULL</td>
+    <td>NULL</td>
+    <td>NULL</td>
+    <td>NULL</td>
+    <td>NULL</td>
+    <td>NULL</td>
+    <td>NULL</td>
+    <td>NULL</td>
+    <td>NULL</td>
+    <td>NULL</td>
+    <td>NULL</td>
+    <td>NULL</td>
+    <td>NULL</td>
+    </tr>
+  </table>
+</div>
+<div class="result" data-confidence="0.983939393">
+  <img class="source" src="/hackfest-data/ttf-photos/image3.jpg" title="/hackfest-data/ttf-photos/image3.jpg">
+  <img class="match" src="/hackfest-data/ttf-photos/image1.jpg" title="/hackfest-data/ttf-photos/image1.jpg">
+  <span class="confidence">0.983939393</span>
+  <table class="metadata">
+    <tr>
+      <th scope="col">Column1</th>
+      <th scope="col">ContentType</th>
+      <th scope="col">CountryOfBirth</th>
+      <th scope="col">DateOfBirth</th>
+      <th scope="col">FamilyLinksFullName</th>
+      <th scope="col">FamilyLinksGender</th>
+      <th scope="col">FamilyLinksStatus</th>
+      <th scope="col">FatherName</th>
+      <th scope="col">FullNameTransliterated</th>
+      <th scope="col">MotherName</th>
+      <th scope="col">Nationality</th>
+      <th scope="col">PictureReference</th>
+      <th scope="col">PlaceOfBirth</th>
+      <th scope="col">Source</th>
+      <th scope="col">ThumbnailImageUrl</th>
+      <th scope="col">WatermarkedImageUrl</th>
+    </tr>
+    <tr>
+    <td>NULL</td>
+    <td>NULL</td>
+    <td>NULL</td>
+    <td>NULL</td>
+    <td>NULL</td>
+    <td>NULL</td>
+    <td>NULL</td>
+    <td>NULL</td>
+    <td>NULL</td>
+    <td>NULL</td>
+    <td>NULL</td>
+    <td>NULL</td>
+    <td>NULL</td>
+    <td>NULL</td>
+    <td>NULL</td>
+    <td>NULL</td>
+    </tr>
+    <tr>
+    <td>NULL</td>
+    <td>NULL</td>
+    <td>NULL</td>
+    <td>NULL</td>
+    <td>NULL</td>
+    <td>NULL</td>
+    <td>NULL</td>
+    <td>NULL</td>
+    <td>NULL</td>
+    <td>NULL</td>
+    <td>NULL</td>
+    <td>NULL</td>
+    <td>NULL</td>
+    <td>NULL</td>
+    <td>NULL</td>
+    <td>NULL</td>
+    </tr>
+  </table>
+</div>
+<div class="result" data-confidence="0.9819219282">
+  <img class="source" src="/hackfest-data/ttf-photos/image2.jpg" title="/hackfest-data/ttf-photos/image2.jpg">
+  <img class="match" src="/hackfest-data/ttf-photos/image1.jpg" title="/hackfest-data/ttf-photos/image1.jpg">
+  <span class="confidence">0.9819219282</span>
+  <table class="metadata">
+    <tr>
+      <th scope="col">Column1</th>
+      <th scope="col">ContentType</th>
+      <th scope="col">CountryOfBirth</th>
+      <th scope="col">DateOfBirth</th>
+      <th scope="col">FamilyLinksFullName</th>
+      <th scope="col">FamilyLinksGender</th>
+      <th scope="col">FamilyLinksStatus</th>
+      <th scope="col">FatherName</th>
+      <th scope="col">FullNameTransliterated</th>
+      <th scope="col">MotherName</th>
+      <th scope="col">Nationality</th>
+      <th scope="col">PictureReference</th>
+      <th scope="col">PlaceOfBirth</th>
+      <th scope="col">Source</th>
+      <th scope="col">ThumbnailImageUrl</th>
+      <th scope="col">WatermarkedImageUrl</th>
+    </tr>
+    <tr>
+    <td>NULL</td>
+    <td>NULL</td>
+    <td>NULL</td>
+    <td>NULL</td>
+    <td>NULL</td>
+    <td>NULL</td>
+    <td>NULL</td>
+    <td>NULL</td>
+    <td>NULL</td>
+    <td>NULL</td>
+    <td>NULL</td>
+    <td>NULL</td>
+    <td>NULL</td>
+    <td>NULL</td>
+    <td>NULL</td>
+    <td>NULL</td>
+    </tr>
+    <tr>
+    <td>NULL</td>
+    <td>NULL</td>
+    <td>NULL</td>
+    <td>NULL</td>
+    <td>NULL</td>
+    <td>NULL</td>
+    <td>NULL</td>
+    <td>NULL</td>
+    <td>NULL</td>
+    <td>NULL</td>
+    <td>NULL</td>
+    <td>NULL</td>
+    <td>NULL</td>
+    <td>NULL</td>
+    <td>NULL</td>
+    <td>NULL</td>
+    </tr>
+  </table>
+</div>
+<div class="result" data-confidence="0.9799989">
+  <img class="source" src="/hackfest-data/ttf-photos/image4.jpg" title="/hackfest-data/ttf-photos/image4.jpg">
+  <img class="match" src="/hackfest-data/ttf-photos/image5.jpg" title="/hackfest-data/ttf-photos/image5.jpg">
+  <span class="confidence">0.9799989</span>
+  <table class="metadata">
+    <tr>
+      <th scope="col">Column1</th>
+      <th scope="col">ContentType</th>
+      <th scope="col">CountryOfBirth</th>
+      <th scope="col">DateOfBirth</th>
+      <th scope="col">FamilyLinksFullName</th>
+      <th scope="col">FamilyLinksGender</th>
+      <th scope="col">FamilyLinksStatus</th>
+      <th scope="col">FatherName</th>
+      <th scope="col">FullNameTransliterated</th>
+      <th scope="col">MotherName</th>
+      <th scope="col">Nationality</th>
+      <th scope="col">PictureReference</th>
+      <th scope="col">PlaceOfBirth</th>
+      <th scope="col">Source</th>
+      <th scope="col">ThumbnailImageUrl</th>
+      <th scope="col">WatermarkedImageUrl</th>
+    </tr>
+    <tr>
+    <td>NULL</td>
+    <td>NULL</td>
+    <td>NULL</td>
+    <td>NULL</td>
+    <td>NULL</td>
+    <td>NULL</td>
+    <td>NULL</td>
+    <td>NULL</td>
+    <td>NULL</td>
+    <td>NULL</td>
+    <td>NULL</td>
+    <td>NULL</td>
+    <td>NULL</td>
+    <td>NULL</td>
+    <td>NULL</td>
+    <td>NULL</td>
+    </tr>
+    <tr>
+    <td>NULL</td>
+    <td>NULL</td>
+    <td>NULL</td>
+    <td>NULL</td>
+    <td>NULL</td>
+    <td>NULL</td>
+    <td>NULL</td>
+    <td>NULL</td>
+    <td>NULL</td>
+    <td>NULL</td>
+    <td>NULL</td>
+    <td>NULL</td>
+    <td>NULL</td>
+    <td>NULL</td>
+    <td>NULL</td>
+    <td>NULL</td>
+    </tr>
+  </table>
+</div>
+<div class="result" data-confidence="0.97449494">
+  <img class="source" src="/hackfest-data/ttf-photos/image5.jpg" title="/hackfest-data/ttf-photos/image5.jpg">
+  <img class="match" src="/hackfest-data/ttf-photos/image4.jpg" title="/hackfest-data/ttf-photos/image4.jpg">
+  <span class="confidence">0.97449494</span>
+  <table class="metadata">
+    <tr>
+      <th scope="col">Column1</th>
+      <th scope="col">ContentType</th>
+      <th scope="col">CountryOfBirth</th>
+      <th scope="col">DateOfBirth</th>
+      <th scope="col">FamilyLinksFullName</th>
+      <th scope="col">FamilyLinksGender</th>
+      <th scope="col">FamilyLinksStatus</th>
+      <th scope="col">FatherName</th>
+      <th scope="col">FullNameTransliterated</th>
+      <th scope="col">MotherName</th>
+      <th scope="col">Nationality</th>
+      <th scope="col">PictureReference</th>
+      <th scope="col">PlaceOfBirth</th>
+      <th scope="col">Source</th>
+      <th scope="col">ThumbnailImageUrl</th>
+      <th scope="col">WatermarkedImageUrl</th>
+    </tr>
+    <tr>
+    <td>NULL</td>
+    <td>NULL</td>
+    <td>NULL</td>
+    <td>NULL</td>
+    <td>NULL</td>
+    <td>NULL</td>
+    <td>NULL</td>
+    <td>NULL</td>
+    <td>NULL</td>
+    <td>NULL</td>
+    <td>NULL</td>
+    <td>NULL</td>
+    <td>NULL</td>
+    <td>NULL</td>
+    <td>NULL</td>
+    <td>NULL</td>
+    </tr>
+    <tr>
+    <td>NULL</td>
+    <td>NULL</td>
+    <td>NULL</td>
+    <td>NULL</td>
+    <td>NULL</td>
+    <td>NULL</td>
+    <td>NULL</td>
+    <td>NULL</td>
+    <td>NULL</td>
+    <td>NULL</td>
+    <td>NULL</td>
+    <td>NULL</td>
+    <td>NULL</td>
+    <td>NULL</td>
+    <td>NULL</td>
+    <td>NULL</td>
+    </tr>
+  </table>
+</div>
+</body>
+</html>
