@@ -73,13 +73,16 @@ with open(report_file, 'w', encoding='utf-8') as fobj:
 
     fobj.write('<div class="controls">\n')
     fobj.write('''
-      <label for="confidence-min">Minimum</label> 
-      <input id="confidence-min" type="number" value="0.90">
-      <label for="confidence-max">Maximum</label>
-      <input id="confidence-max" type="number" value="1.0">
-      <input id="apply" type="button" value="Apply" title="Apply...">
+      <div class="control">
+        <label for="confidence-min">Minimum</label>
+        <input id="confidence-min" type="number" value="0.90">
+        <label for="confidence-max">Maximum</label>
+        <input id="confidence-max" type="number" value="1.0">
+        <input id="apply" type="button" value="Apply" title="Apply...">
+      </div>
     ''')
 
+    fobj.write('<div class="control">\n')
     for dropdown in 'ContentType', 'CountryOfBirth', 'Nationality', 'FamilyLinksGender', 'FamilyLinksStatus', 'Source':
         fobj.write('<label for="{0}">{0}\n'.format(dropdown))
         fobj.write('  <select name="{0}" id="{0} value="Apply filters" title="Apply filters">">\n'.format(dropdown))
@@ -90,6 +93,8 @@ with open(report_file, 'w', encoding='utf-8') as fobj:
             fobj.write('    <option value="{0}">{0} ({1:.0f}%)</option>\n'.format(dropdown_value, count / total_count * 100.))
         fobj.write('  </select>\n')
         fobj.write('</label>\n')
+    fobj.write('</div>\n')
+
     fobj.write('</div>\n')
 
     fobj.write('<div class="results">\n')
