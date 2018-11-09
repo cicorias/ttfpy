@@ -98,7 +98,7 @@ with open(report_file, 'w', encoding='utf-8') as fobj:
 
         fobj.write('<div class="result" data-confidence="%s">\n' % confidence)
         fobj.write('  <img class="source" src="%s" data-original="%s" title="%s">\n' % (image_placeholder, source_url, source))
-        fobj.write('  <img class="match" src="%s"  data-original="%s"title="%s">\n' % (image_placeholder, match_url, match))
+        fobj.write('  <img class="match" src="%s"  data-original="%s" title="%s">\n' % (image_placeholder, match_url, match))
         fobj.write('  <span class="confidence">%s</span>\n' % confidence)
         fobj.write('  <table class="metadata">\n')
 
