@@ -32,16 +32,18 @@ def inject_content(path):
     return data
 
 
-rows = []
+rows = {}
 for row in DictReader(args.tsv_file, delimiter='\t'):
     source = row['source'].strip()
     match = row['match'].strip()
     confidence = float(row['confidence'])
     if source == match or confidence >= args.max_confidence or confidence <= args.min_confidence:
         continue
-    rows.append(row)
+    if (source, match) in rows or (match, source) in rows:
+        continue
+    rows[(source, match)] = row
 
-rows.sort(key=lambda r: float(r['confidence']), reverse=True)
+rows = sorted(rows.values(), key=lambda r: float(r['confidence']), reverse=True)
 
 image_placeholder = 'data:image/gif;base64,R0lGODdhAQABAPAAAMPDwwAAACwAAAAAAQABAAACAkQBADs='
 
